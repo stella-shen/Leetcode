@@ -1,9 +1,11 @@
+import operator
 
 class Solution(object):
     def islandPerimeter(self, grid):
         """
         :type grid: List[List[int]]
         :rtype: int
+        """
         """
         count = 0
         neighbour = 0
@@ -18,6 +20,13 @@ class Solution(object):
                     if (j + 1 < row) and grid[i][j + 1] == 1:
                         neighbour += 1
         return count * 4 - neighbour * 2
+        """
+        ret = 0
+        for row in grid + map(list, zip(*grid)):
+            ret +=  sum(map(operator.ne, [0] + row, row + [0]))
+        return ret
+
+
 
 if __name__ == '__main__':
     sol = Solution()
