@@ -6,7 +6,7 @@ class LRUCache(object):
         :type capacity: int
         """
         self.capacity = capacity
-        self.freq_list = list()
+        self.recent_list = list()
         self.cache = dict()
 
     def get(self, key):
@@ -15,8 +15,8 @@ class LRUCache(object):
         :rtype: int
         """
         if self.cache.has_key(key):
-            self.freq_list.remove(key)
-            self.freq_list.insert(0, key)
+            self.recent_list.remove(key)
+            self.recent_list.insert(0, key)
             return self.cache[key]
         else:
             return -1
@@ -30,15 +30,15 @@ class LRUCache(object):
         """
         if len(self.cache) < self.capacity or self.cache.has_key(key):
             if self.cache.has_key(key):
-                self.freq_list.remove(key)
+                self.recent_list.remove(key)
             self.cache[key] = value
-            self.freq_list.insert(0, key)
+            self.recent_list.insert(0, key)
         else:
-            lr_key = self.freq_list[-1]
+            lr_key = self.recent_list[-1]
             self.cache.pop(lr_key)
-            self.freq_list.remove(lr_key)
+            self.recent_list.remove(lr_key)
             self.cache[key] = value
-            self.freq_list.insert(0, key)
+            self.recent_list.insert(0, key)
 
 if __name__ == '__main__':
     cache = LRUCache(2)
