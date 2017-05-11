@@ -5,16 +5,11 @@ class Solution(object):
         :type nums: List[int]
         :rtype: void Do not return anything, modify nums in-place instead.
         """
-        right = 0
         left = 0
-        l = len(nums)
-        while  right < l:
-            if nums[right] != 0:
-                temp = nums[left]
-                nums[left] = nums[right]
-                nums[right] = temp
+        for i in range(len(nums)):
+            if nums[i]:
+                nums[i], nums[left] = nums[left], nums[i]
                 left += 1
-            right += 1
 
 
 if __name__ == '__main__':
