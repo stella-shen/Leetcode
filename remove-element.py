@@ -6,34 +6,17 @@ class Solution(object):
         :type val: int
         :rtype: int
         """
-        if len(nums) == 0:
-            return 0
-        ret = 0
         tail = len(nums) - 1
-        while tail >= 0 and nums[tail] == val:
-            tail -= 1
-        if tail < 0:
-            return 0
 
-        for i in range(len(nums)):
-            if i > tail:
-                break
-            if nums[i] != val:
-                ret += 1
-            else:
-                temp = nums[i]
-                nums[i] = nums[tail]
-                nums[tail] = temp
-                ret += 1
-                while nums[tail] == val:
-                    tail -= 1
-                    if tail <= i:
-                        break
+        for i in range(len(nums)-1, -1, -1):
+            if nums[i] == val:
+                nums[i], nums[tail] = nums[tail], nums[i]
+                tail -= 1
 
-        return ret
+        return tail + 1
 
 if __name__ == '__main__':
     sol = Solution()
-    nums = [1]
-    val = 1
+    nums = [3, 2, 2, 3]
+    val = 3
     print sol.removeElement(nums, val)
