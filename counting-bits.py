@@ -16,7 +16,7 @@ class Solution(object):
                 ret[ind] = 1
                 power_num += 1
             else:
-                ret[ind] = ret[(2 ** (power_num - 1))] + ret[ind - (2 ** (power_num - 1))]
+                ret[ind] = 1 + ret[ind - (2 ** (power_num - 1))]
 
         return ret
         
