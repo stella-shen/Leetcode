@@ -7,11 +7,9 @@ class Solution(object):
         """
         if n == 0:
             return 1
-        if n == 1:
-            return 9
         cur = 9
-        res = 9
-        for i in xrange(n - 1):
-            res *= cur
-            cur -= 1
-        return res + self.countNumbersWithUniqueDigits(n - 1)
+        res = 10
+        for i in xrange(2, n + 1):
+            cur *= 10 - (i - 1)
+            res += cur
+        return res
