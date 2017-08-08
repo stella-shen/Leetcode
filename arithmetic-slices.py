@@ -6,13 +6,13 @@ class Solution(object):
         :rtype: int
         """
         res = 0
-        for start in xrange(len(A) - 2):
-            d = A[start + 1] - A[start]
-            for end in xrange(start+2, len(A)):
-                if A[end] - A[end - 1] == d:
-                    res += 1
-                else:
-                    break
+        dp = 0
+        for i in xrange(2, len(A)):
+            if A[i] - A[i-1] == A[i-1] - A[i-2]:
+                dp += 1
+                res += dp
+            else:
+                dp = 0
         return res
 
 if __name__ == '__main__':
