@@ -1,3 +1,4 @@
+import numpy as np
 
 class Solution(object):
     def PredictTheWinner(self, nums):
@@ -5,27 +6,17 @@ class Solution(object):
         :type nums: List[int]
         :rtype: bool
         """
-        memo = list()
-        for i in xrange(len(nums)):
-            cur_list = list()
-            for j in xrange(len(nums)):
-                cur_list.append('False')
-            memo.append(cur_list)
-        if self.winner(nums, 0, len(nums) - 1, memo) >= 0:
+        dp = np.zeros([len(nums)], dtype=int)
+        for s in reversed(xrange(len(nums))):
+            dp[s] = nums[s]
+            for e in xrange(s + 1, len(nums)):
+                a = nums[s] - dp[e]
+                b = nums[e] - dp[e - 1]
+                dp[e] = max(a, b)
+        if dp[-1] >= 0:
             return True
         else:
             return False
-        
-    def winner(self, nums, s, e, memo):
-        if s == e:
-            memo[s][e] = nums[s]
-            return memo[s][e]
-        if memo[s][e] != 'False':
-            return memo[s][e]
-        a = nums[s] - self.winner(nums, s + 1, e, memo)
-        b = nums[e] - self.winner(nums, s, e - 1, memo)
-        memo[s][e] = max(a, b)
-        return memo[s][e]
 
 if __name__ == '__main__':
     sol = Solution()
