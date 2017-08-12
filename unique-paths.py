@@ -10,11 +10,11 @@ class Solution(object):
             return self.uniquePaths(n, m)
         ways = [1] * m
 
-        for i in xrange(1, m):
-            for j in xrange(1, n):
+        for i in xrange(1, n):
+            for j in xrange(1, m):
                 ways[j] += ways[j - 1]
 
-        return ways[n - 1]
+        return ways[m - 1]
 
 if __name__ == '__main__':
     sol = Solution()
