@@ -14,8 +14,12 @@ class Solution(object):
         :type target: int
         :rtype: int
         """
-        res = list()
+        res = -1
+        cnt = 0
         for i in xrange(len(self.nums)):
-            if self.nums[i] == target:
-                res.append(i)
-        return random.choice(res)
+            if self.nums[i] != target:
+                continue
+            if cnt == 0 or random.randint(0, cnt) == 0:
+                res = i
+            cnt += 1
+        return res
