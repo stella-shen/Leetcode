@@ -1,31 +1,33 @@
 class NumArray(object):
 
+    class SegmentTreeNode:
+        def __init__(self, i, j, s):
+            self.start, self.end, self.sum = i, j, s
+
     def __init__(self, nums):
         """
         :type nums: List[int]
         """
-        if not nums:
-            return 
         self.nums = nums
-        self.n = len(nums)
-        self.bit = [0] * (self.n + 1)
-        for i in xrange(len(nums)):
-            self.add(i + 1, nums[i])
+        def buildHelper(nums, start, end):
+            if start > end:
+                return None
+            root = self.SegmentTreeNode(start, end, 0)
 
-    def lowbit(self, x):
-        return x & (-x)
+            if start == end:
+                root.sum = nums[start]
+                return root
 
-    def add(self, x, val):
-        while x <= self.n:
-            self.bit[x] += val
-            x += self.lowbit(x)
+            root.left = buildHelper(nums, start, (start + end) / 2)
+            root.right = buildHelper(nums, (start + end) / 2 + 1, end)
 
-    def sum(self, x):
-        res = 0
-        while x > 0:
-            res += self.bit[x]
-            x -= self.lowbit(x)
-        return res
+            root.sum = 0
+            if root.left:
+                root.sum += root.left.sum
+            if root.right:
+                root.sum += root.right.sum
+            return root
+        self.root = buildHelper(nums, 0, len(nums) - 1)
 
     def update(self, i, val):
         """
@@ -33,8 +35,24 @@ class NumArray(object):
         :type val: int
         :rtype: void
         """
-        self.add(i + 1, val - self.nums[i])
-        self.nums[i] = val
+        def updateHelper(root, i, val):
+            if not root or root.start > i or root.end < i:
+                return
+            if root.start == i and root.end == i:
+                root.sum = val
+                return
+            updateHelper(root.left, i, val)
+            updateHelper(root.right, i, val)
+
+            root.sum = 0
+            if root.left:
+                root.sum += root.left.sum
+            if root.right:
+                root.sum += root.right.sum
+        
+        if self.nums[i] != val:
+            self.nums[i] = val
+            updateHelper(self.root, i, val)
 
     def sumRange(self, i, j):
         """
@@ -42,9 +60,14 @@ class NumArray(object):
         :type j: int
         :rtype: int
         """
-        if not self.nums:
-            return 0
-        return self.sum(j + 1) - self.sum(i)
+        def sumRangeHelper(root, start, end):
+            if not root or root.end < start or root.start > end:
+                return 0
+            if root.start >= start and root.end <= end:
+                return root.sum
+            return sumRangeHelper(root.left, start, end) + \
+                   sumRangeHelper(root.right, start, end)
+        return sumRangeHelper(self.root, i, j)
 
 
 # Your NumArray object will be instantiated and called as such:
