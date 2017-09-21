@@ -8,21 +8,28 @@ class Solution(object):
         :type queries: List[List[str]]
         :rtype: List[float]
         """
-        g = collections.defaultdict(lambda: collections.defaultdict(int))
-        for (s, t), v in zip(equations, values):
-            g[s][t] = v
-            g[t][s] = 1.0 / v
-        
-        for k in g.keys():
-            g[k][k] = 1.0
-            for s in g:
-                for t in g:
-                    if g[s][k] and g[k][t]:
-                        g[s][t] = g[s][k] * g[k][t]
+        def check(up, down, lookup, visited):
+            if up in lookup and down in lookup[up]:
+                return (True, lookup[up][down])
+            for k, v in lookup[up].iteritems():
+                if k not in visited:
+                    visited.add(k)
+                    tmp = check(k, down, lookup, visited)
+                    if tmp[0]:
+                        return (True, v * tmp[1])
+            return (False, -1)
+
+        lookup = collections.defaultdict(dict)
+        for i, e in enumerate(equations):
+            lookup[e[0]][e[1]] = values[i]
+            if values[i] != 0:
+                lookup[e[1]][e[0]] = 1.0 / values[i]
 
         ans = []
-        for s, t in queries:
-            ans.append(g[s][t] if g[s][t] else -1.0)
+        for q in queries:
+            visited = set()
+            tmp = check(q[0], q[1], lookup, visited)
+            ans.append(tmp[1] if tmp[0] else -1)
         return ans
 
 if __name__ == '__main__':
